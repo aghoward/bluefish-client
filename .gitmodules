@@ -1,0 +1,6 @@
+[submodule "cdif"]
+	path = cdif
+	url = git@github.com:aghoward/cdif.git
+[submodule "argparsing"]
+	path = argparsing
+	url = git@github.com:aghoward/argparsing.git
