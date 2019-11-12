@@ -1,6 +1,7 @@
 #include "commands/print_usage_command.h"
 
 #include "support/arguments.h"
+#include "encryption/encryption_helpers.h"
 
 #include <iostream>
 
@@ -15,6 +16,7 @@ void PrintUsageCommand::execute(const Arguments&)
                 std::cout << "File count: " << master_block.file_count << std::endl;
                 std::cout << std::dec;
                 std::cout << "iv size: " << master_block.encryption_iv.size() << std::endl;
+                std::cout << "iv: " << print_hex(master_block.encryption_iv) << std::endl;
             },
             [&] (const auto& failure_reason)
             {

@@ -4,9 +4,13 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <iostream>
 
 #include <cryptopp/osrng.h>
 #include <cryptopp/twofish.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/sha3.h>
 
 uint32_t get_key_size(const std::string& password)
 {
@@ -34,9 +38,27 @@ std::string create_random_iv()
     rng.GenerateBlock(iv, sizeof(iv));
 
     auto iv_str = std::string(static_cast<uint32_t>(CryptoPP::Twofish::BLOCKSIZE), 0x0);
-    auto it = iv_str.begin();
-    for (auto c : iv)
-        *it++ = c;
+    iv_str.assign(reinterpret_cast<char*>(iv), sizeof(iv));
 
     return iv_str;
+}
+
+std::string print_hex(const std::string& data)
+{
+    std::string hex_str = "";
+    CryptoPP::StringSource(data, true,
+            new CryptoPP::HexEncoder(new CryptoPP::StringSink(hex_str)));
+
+    return hex_str;
+}
+
+std::string create_password_from(const std::string& original)
+{
+    CryptoPP::SHA3_256 hasher;
+    auto digest = std::string(hasher.DigestSize(), static_cast<char>(0x0));
+
+    hasher.Update(reinterpret_cast<const uint8_t*>(original.data()), original.size());
+    hasher.Final(reinterpret_cast<uint8_t*>(&digest[0]));
+
+    return digest;
 }

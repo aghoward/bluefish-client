@@ -2,6 +2,13 @@
 
 #include <string>
 
+#include "either/either.h"
+
+enum class EncryptionFailureReason
+{
+    InvalidPassword
+};
+
 class Encrypter
 {
     public:
@@ -19,7 +26,7 @@ class Decrypter
     public:
         Decrypter() {}
 
-        std::string decrypt(
+        either<std::string, EncryptionFailureReason> decrypt(
             const std::string& cyphertext,
             std::string&& password,
             const std::string& iv) const;

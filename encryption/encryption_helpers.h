@@ -8,6 +8,8 @@
 uint32_t get_key_size(const std::string& password);
 std::vector<uint8_t> bytes_from(const std::string&, uint32_t size);
 std::string create_random_iv();
+std::string print_hex(const std::string&);
+std::string create_password_from(const std::string& original);
 
 template <typename T>
 void clear_data(T& input)

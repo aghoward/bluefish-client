@@ -13,17 +13,25 @@ void ReadFileCommand::execute(const Arguments& arguments)
         .match(
             [&] (const auto& master_block)
             {
-                auto master_password = askpass("Master Password:");
+                auto master_password = askpass("Master Password: ");
                 _api.read_file(arguments.read_file)
                     .match(
                         [&] (const auto& file) -> void {
-                            auto password = _decrypter.decrypt(
+                            _decrypter.decrypt(
                                     file.password,
                                     std::move(master_password),
-                                    master_block.encryption_iv);
-                            std::cout << "Filename: " << file.name << std::endl;
-                            std::cout << "Username: " << file.username << std::endl;
-                            std::cout << "Password: " << password << std::endl;
+                                    master_block.encryption_iv)
+                                .match(
+                                    [&](const auto& password)
+                                    {
+                                        std::cout << "Filename: " << file.name << std::endl;
+                                        std::cout << "Username: " << file.username << std::endl;
+                                        std::cout << "Password: " << password << std::endl;
+                                    },
+                                    [&](const auto& failure_reason) {
+                                        std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
+                                    }
+                                );
                         },
                         [&] (const auto& failure_reason) -> void {
                             std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
