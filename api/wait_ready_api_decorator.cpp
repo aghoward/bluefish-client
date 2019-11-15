@@ -11,11 +11,7 @@
 
 either<Success, FailureReason> WaitReadyAPIDecorator::wait_ready()
 {
-    CommandStatus status;
-    _device >> status;
-    if (status == CommandStatus::Ready)
-        return Success{};
-    return FailureReason::DeviceNotReady;
+    return _decorated.wait_ready();
 }
 
 

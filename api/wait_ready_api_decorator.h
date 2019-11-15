@@ -14,7 +14,8 @@ class WaitReadyAPIDecorator : public API
         API& _decorated;
         IODevice& _device;
 
-        either<Success, FailureReason> wait_ready();
+    protected:
+        either<Success, FailureReason> wait_ready() override;
 
     public:
         WaitReadyAPIDecorator(API& api, IODevice& device)

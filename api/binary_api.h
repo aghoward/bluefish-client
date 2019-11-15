@@ -2,6 +2,8 @@
 
 #include "api/api.h"
 #include "api/file.h"
+#include "api/identifiers.h"
+#include "either/either.h"
 #include "serial/io_device.h"
 
 #include <string>
@@ -14,7 +16,8 @@ enum class Command : uint8_t
     GetMasterBlock,
     ListFiles,
     RemoveFile,
-    Format
+    Format,
+    GetFileName
 };
 
 enum class CommandStatus : uint8_t
@@ -30,6 +33,13 @@ class BinaryAPI : public API
 {
     private:
         IODevice& _device;
+
+        either<std::string, FailureReason> get_filename(const FileId& id);
+        either<FileId, FailureReason> get_file_id(const std::string& filename);
+        std::vector<FileId> list_ids();
+
+    protected:
+        either<Success, FailureReason> wait_ready() override;
 
     public:
         BinaryAPI(IODevice& device)

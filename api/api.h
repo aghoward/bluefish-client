@@ -30,6 +30,7 @@ class API
     public:
         virtual ~API() {}
         
+        virtual either<Success, FailureReason> wait_ready() = 0;
         virtual either<Success, FailureReason> write_file(const File&) = 0;
         virtual either<File, FailureReason> read_file(const std::string&) = 0;
         virtual either<std::vector<std::string>, FailureReason> list_files() = 0;
