@@ -3,20 +3,7 @@
 #include <type_traits>
 #include <utility>
 
-template <bool Bool, typename T, T TrueValue, T FalseValue>
-struct conditional_value
-{
-    static constexpr T value = TrueValue;
-};
-
-template <typename T, T TrueValue,T FalseValue>
-struct conditional_value<false, T, TrueValue, FalseValue>
-{
-    static constexpr T value = FalseValue;
-};
-
-template <bool Bool, typename T, T TrueValue, T FalseValue>
-static constexpr T conditional_value_v = conditional_value<Bool, T, TrueValue, FalseValue>::value;
+#include "either/custom_traits.h"
 
 enum class MemberIndex
 {
@@ -126,5 +113,19 @@ class either
             if (index == MemberIndex::First)
                 return matchFirst(std::move(member.first));
             return matchSecond(std::move(member.second));
+        }
+
+        template <typename TFirstFunc, typename TNewResult = std::invoke_result_t<TFirstFunc, TFirst>,
+                 typename TNewFirst = typename either_traits<TNewResult>::First>
+        either<TNewFirst, TSecond> foldFirst(TFirstFunc&& mapFirst)
+        {
+            return match(mapFirst, [] (auto&& second) -> either<TNewFirst, TSecond> { return second; });
+        }
+
+        template <typename TSecondFunc, typename TNewResult = std::invoke_result_t<TSecondFunc, TSecond>,
+                 typename TNewSecond = typename either_traits<TNewResult>::Second>
+        either<TFirst, TNewSecond> foldSecond(TSecondFunc&& mapSecond)
+        {
+            return match([] (auto&& first) -> either<TFirst, TNewSecond> { return first; }, mapSecond);
         }
 };

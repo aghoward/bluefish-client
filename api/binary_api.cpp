@@ -34,7 +34,7 @@ either<Success, APIFailureReason> BinaryAPI::wait_ready()
 either<std::string, APIFailureReason> BinaryAPI::get_filename(const FileId& id)
 {
     return wait_ready()
-        .match(
+        .foldFirst(
             [&] (auto&&) -> either<std::string, APIFailureReason> {
                 _device << Command::GetFileName << id;
 
@@ -48,9 +48,6 @@ either<std::string, APIFailureReason> BinaryAPI::get_filename(const FileId& id)
                 _device >> filename;
 
                 return filename;
-            },
-            [] (auto&& failure) -> either<std::string, FailureReason> {
-                return failure;
             });
 }
 
@@ -88,10 +85,10 @@ either<Success, APIFailureReason> BinaryAPI::write_file(const File& file)
 either<File, APIFailureReason> BinaryAPI::read_file(const std::string& filename)
 {
     return get_file_id(filename)
-        .match(
+        .foldFirst(
             [&] (const auto& id) -> either<File, APIFailureReason> {
                 return wait_ready()
-                    .match(
+                    .foldFirst(
                         [&] (auto&&) -> either<File, APIFailureReason> {
                             _device << Command::ReadFile << id;
 
@@ -104,12 +101,8 @@ either<File, APIFailureReason> BinaryAPI::read_file(const std::string& filename)
                             File file;
                             _device >> file;
                             return file;
-                        },
-                        [] (auto&& failure) -> either<File, FailureReason> {
-                            return failure;
                         });
-            },
-            [](auto&& failure) -> either<File, FailureReason> { return failure; });
+            });
 }
 
 std::vector<FileId> BinaryAPI::list_ids()
@@ -153,10 +146,10 @@ either<std::vector<std::string>, APIFailureReason> BinaryAPI::list_files()
 either<Success, APIFailureReason> BinaryAPI::remove_file(const std::string& filename)
 {
     return get_file_id(filename)
-        .match(
+        .foldFirst(
             [&] (const auto& id) -> either<Success, APIFailureReason> {
                 return wait_ready()
-                    .match(
+                    .foldFirst(
                         [&] (auto&&) -> either<Success, APIFailureReason> {
                             _device << Command::RemoveFile << id;
                             CommandStatus status;
@@ -166,10 +159,8 @@ either<Success, APIFailureReason> BinaryAPI::remove_file(const std::string& file
                                 return convert_status(status);
 
                             return Success{};
-                        },
-                        [] (auto&& failure) -> either<Success, FailureReason> { return failure; });
-            },
-            [] (auto&& failure) -> either<Success, FailureReason> { return failure; });
+                        });
+            });
 }
 
 either<Success, APIFailureReason> BinaryAPI::format(const std::string& iv, const std::string& challenge)

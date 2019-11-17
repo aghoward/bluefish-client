@@ -18,53 +18,47 @@ either<Success, APIFailureReason> WaitReadyAPIDecorator::wait_ready()
 either<Success, APIFailureReason> WaitReadyAPIDecorator::write_file(const File& file)
 {
     return wait_ready()
-        .match(
-            [&] (const auto&) { return _decorated.write_file(file); },
-            [] (auto&& failure) -> either<Success, FailureReason> { return failure; }
+        .foldFirst(
+            [&] (const auto&) { return _decorated.write_file(file); }
         );
 }
 
 either<File, APIFailureReason> WaitReadyAPIDecorator::read_file(const std::string& filename)
 {
     return wait_ready()
-        .match(
-            [&] (const auto&) { return _decorated.read_file(filename); },
-            [] (auto&& failure) -> either<File, FailureReason> { return failure; }
+        .foldFirst(
+            [&] (const auto&) { return _decorated.read_file(filename); }
         );
 }
 
 either<std::vector<std::string>, APIFailureReason> WaitReadyAPIDecorator::list_files()
 {
     return wait_ready()
-        .match(
-            [&] (const auto&) { return _decorated.list_files(); },
-            [] (auto&& failure) -> either<std::vector<std::string>, FailureReason> { return failure; }
+        .foldFirst(
+            [&] (const auto&) { return _decorated.list_files(); }
         );
 }
 
 either<Success, APIFailureReason> WaitReadyAPIDecorator::remove_file(const std::string& filename)
 {
     return wait_ready()
-        .match(
-            [&] (const auto&) { return _decorated.remove_file(filename); },
-            [] (auto&& failure) -> either<Success, FailureReason> { return failure; }
+        .foldFirst(
+            [&] (const auto&) { return _decorated.remove_file(filename); }
         );
 }
 
 either<Success, APIFailureReason> WaitReadyAPIDecorator::format(const std::string& iv, const std::string& challenge)
 {
     return wait_ready()
-        .match(
-            [&] (const auto&) { return _decorated.format(iv); },
-            [] (auto&& failure) -> either<Success, FailureReason> { return failure; }
+        .foldFirst(
+            [&] (const auto&) { return _decorated.format(iv, challenge); }
         );
 }
 
 either<MasterBlock, APIFailureReason> WaitReadyAPIDecorator::get_master_block()
 {
     return wait_ready()
-        .match(
-            [&] (const auto&) { return _decorated.get_master_block(); },
-            [] (auto&& failure) -> either<MasterBlock, FailureReason> { return failure; }
+        .foldFirst(
+            [&] (const auto&) { return _decorated.get_master_block(); }
         );
 }
