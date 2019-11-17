@@ -19,16 +19,9 @@ void AddFileCommand::execute(const Arguments& arguments)
     }
 
     auto password = askpass();
-    auto master_password = askpass("Master Password:");
-    auto retry = askpass("Retype Master Password:");
+    auto master_password = askpass("Master Password: ");
 
-    if (master_password != retry)
-    {
-        std::cout << "Master passwords do not match!" << std::endl;
-        return;
-    }
-
-    _api.get_master_block()
+    _challenge_verifier.verify(std::string(master_password))
         .match(
             [&] (const auto& master_block)
             {
@@ -40,7 +33,8 @@ void AddFileCommand::execute(const Arguments& arguments)
                 _api.write_file({ arguments.add_file, arguments.username, encrypted_password })
                     .match(
                         [] (const auto&) -> void { },
-                        [&] (const auto& failure_reason) -> void {
+                        [&] (const auto& api_failure_reason) -> void {
+                            auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
                             std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
                         });
             },

@@ -10,7 +10,8 @@ void RemoveFileCommand::execute(const Arguments& arguments)
     _api.remove_file(arguments.remove_file)
         .match(
             [] (const auto&) -> void {},
-            [&] (const auto& failure_reason) -> void {
+            [&] (const auto& api_failure_reason) -> void {
+                auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
                 std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
             });
 }

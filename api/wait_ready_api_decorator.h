@@ -15,17 +15,17 @@ class WaitReadyAPIDecorator : public API
         IODevice& _device;
 
     protected:
-        either<Success, FailureReason> wait_ready() override;
+        either<Success, APIFailureReason> wait_ready() override;
 
     public:
         WaitReadyAPIDecorator(API& api, IODevice& device)
             : _decorated(api), _device(device)
         {}
 
-        either<Success, FailureReason> write_file(const File&) override;
-        either<File, FailureReason> read_file(const std::string&) override;
-        either<std::vector<std::string>, FailureReason> list_files() override;
-        either<Success, FailureReason> remove_file(const std::string&) override;
-        either<Success, FailureReason> format(const std::string&) override;
-        either<MasterBlock, FailureReason> get_master_block() override;
+        either<Success, APIFailureReason> write_file(const File&) override;
+        either<File, APIFailureReason> read_file(const std::string&) override;
+        either<std::vector<std::string>, APIFailureReason> list_files() override;
+        either<Success, APIFailureReason> remove_file(const std::string&) override;
+        either<Success, APIFailureReason> format(const std::string&, const std::string&) override;
+        either<MasterBlock, APIFailureReason> get_master_block() override;
 };

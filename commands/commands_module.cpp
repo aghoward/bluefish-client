@@ -2,6 +2,7 @@
 
 #include "cdif/cdif.h"
 #include "commands/add_file_command.h"
+#include "commands/challenge_verifier.h"
 #include "commands/command_composite.h"
 #include "commands/command.h"
 #include "commands/format_command.h"
@@ -17,10 +18,10 @@
 void CommandsModule::load(cdif::Container& container)
 {
     container
-        .bind<AddFileCommand, API&, FailureReasonTranslator&, Encrypter&>()
+        .bind<AddFileCommand, API&, FailureReasonTranslator&, Encrypter&, ChallengeVerifier&>()
         .build();
     container
-        .bind<FormatCommand, API&, FailureReasonTranslator&>()
+        .bind<FormatCommand, API&, FailureReasonTranslator&, Encrypter&>()
         .build();
     container
         .bind<ListFilesCommand, API&, FailureReasonTranslator&>()
@@ -47,5 +48,10 @@ void CommandsModule::load(cdif::Container& container)
     container
         .bind<CommandComposite, std::vector<std::unique_ptr<Command>>>()
         .as<Command>()
+        .build();
+
+    container
+        .bind<ChallengeVerifier, API&, Decrypter&, FailureReasonTranslator&>()
+        .in<cdif::Scope::Singleton>()
         .build();
 }

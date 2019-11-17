@@ -9,13 +9,13 @@
 #include <string>
 #include <vector>
 
-either<Success, FailureReason> WaitReadyAPIDecorator::wait_ready()
+either<Success, APIFailureReason> WaitReadyAPIDecorator::wait_ready()
 {
     return _decorated.wait_ready();
 }
 
 
-either<Success, FailureReason> WaitReadyAPIDecorator::write_file(const File& file)
+either<Success, APIFailureReason> WaitReadyAPIDecorator::write_file(const File& file)
 {
     return wait_ready()
         .match(
@@ -24,7 +24,7 @@ either<Success, FailureReason> WaitReadyAPIDecorator::write_file(const File& fil
         );
 }
 
-either<File, FailureReason> WaitReadyAPIDecorator::read_file(const std::string& filename)
+either<File, APIFailureReason> WaitReadyAPIDecorator::read_file(const std::string& filename)
 {
     return wait_ready()
         .match(
@@ -33,7 +33,7 @@ either<File, FailureReason> WaitReadyAPIDecorator::read_file(const std::string& 
         );
 }
 
-either<std::vector<std::string>, FailureReason> WaitReadyAPIDecorator::list_files()
+either<std::vector<std::string>, APIFailureReason> WaitReadyAPIDecorator::list_files()
 {
     return wait_ready()
         .match(
@@ -42,7 +42,7 @@ either<std::vector<std::string>, FailureReason> WaitReadyAPIDecorator::list_file
         );
 }
 
-either<Success, FailureReason> WaitReadyAPIDecorator::remove_file(const std::string& filename)
+either<Success, APIFailureReason> WaitReadyAPIDecorator::remove_file(const std::string& filename)
 {
     return wait_ready()
         .match(
@@ -51,7 +51,7 @@ either<Success, FailureReason> WaitReadyAPIDecorator::remove_file(const std::str
         );
 }
 
-either<Success, FailureReason> WaitReadyAPIDecorator::format(const std::string& iv)
+either<Success, APIFailureReason> WaitReadyAPIDecorator::format(const std::string& iv, const std::string& challenge)
 {
     return wait_ready()
         .match(
@@ -60,7 +60,7 @@ either<Success, FailureReason> WaitReadyAPIDecorator::format(const std::string& 
         );
 }
 
-either<MasterBlock, FailureReason> WaitReadyAPIDecorator::get_master_block()
+either<MasterBlock, APIFailureReason> WaitReadyAPIDecorator::get_master_block()
 {
     return wait_ready()
         .match(

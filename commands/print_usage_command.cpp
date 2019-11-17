@@ -18,8 +18,9 @@ void PrintUsageCommand::execute(const Arguments&)
                 std::cout << "iv size: " << master_block.encryption_iv.size() << std::endl;
                 std::cout << "iv: " << print_hex(master_block.encryption_iv) << std::endl;
             },
-            [&] (const auto& failure_reason)
+            [&] (const auto& api_failure_reason)
             {
+                auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
                 std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
             });
 }

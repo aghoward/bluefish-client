@@ -27,6 +27,8 @@ cdif::Container create_container()
 
 int main(int argc, const char* argv[])
 {
+    std::cout << "Bluefish Password Manager" << std::endl;
+
     auto parser = createArgumentParser();
     auto parseResult = parser.parse(argc, argv);
     if (!parseResult)
@@ -36,8 +38,6 @@ int main(int argc, const char* argv[])
     }
 
     auto arguments = parseResult.value();
-    std::cout << "Device: " << arguments.device << std::endl;
-    std::cout << "Baud Rate: " << arguments.baud << std::endl;
 
     auto container = create_container();
     auto& args = container.resolve<Arguments&>();

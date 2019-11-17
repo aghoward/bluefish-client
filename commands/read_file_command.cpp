@@ -28,16 +28,19 @@ void ReadFileCommand::execute(const Arguments& arguments)
                                         std::cout << "Username: " << file.username << std::endl;
                                         std::cout << "Password: " << password << std::endl;
                                     },
-                                    [&](const auto& failure_reason) {
+                                    [&](const auto& api_failure_reason) {
+                                        auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
                                         std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
                                     }
                                 );
                         },
-                        [&] (const auto& failure_reason) -> void {
+                        [&] (const auto& api_failure_reason) -> void {
+                            auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
                             std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
                         });
             },
-            [&] (const auto& failure_reason) {
+            [&] (const auto& api_failure_reason) {
+                auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
                 std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
             });
 }

@@ -11,31 +11,31 @@
 #include <iostream>
 #include <type_traits>
 
-FailureReason convert_status(CommandStatus status)
+APIFailureReason convert_status(CommandStatus status)
 {
     if (status == CommandStatus::Fail)
-        return FailureReason::GeneralFailure;
+        return APIFailureReason::GeneralFailure;
     if (status == CommandStatus::NotEnoughDiskSpace)
-        return FailureReason::NotEnoughDiskSpace;
+        return APIFailureReason::NotEnoughDiskSpace;
     if (status == CommandStatus::FileNotFound)
-        return FailureReason::FileNotFound;
-    return FailureReason::UnknownFailure;
+        return APIFailureReason::FileNotFound;
+    return APIFailureReason::UnknownFailure;
 }
 
-either<Success, FailureReason> BinaryAPI::wait_ready()
+either<Success, APIFailureReason> BinaryAPI::wait_ready()
 {
     CommandStatus status;
     _device >> status;
     if (status == CommandStatus::Ready)
         return Success{};
-    return FailureReason::DeviceNotReady;
+    return APIFailureReason::DeviceNotReady;
 }
 
-either<std::string, FailureReason> BinaryAPI::get_filename(const FileId& id)
+either<std::string, APIFailureReason> BinaryAPI::get_filename(const FileId& id)
 {
     return wait_ready()
         .match(
-            [&] (auto&&) -> either<std::string, FailureReason> {
+            [&] (auto&&) -> either<std::string, APIFailureReason> {
                 _device << Command::GetFileName << id;
 
                 CommandStatus status;
@@ -54,7 +54,7 @@ either<std::string, FailureReason> BinaryAPI::get_filename(const FileId& id)
             });
 }
 
-either<FileId, FailureReason> BinaryAPI::get_file_id(const std::string& filename)
+either<FileId, APIFailureReason> BinaryAPI::get_file_id(const std::string& filename)
 {
     auto ids = list_ids();
     auto matching_id = std::find_if(
@@ -69,10 +69,10 @@ either<FileId, FailureReason> BinaryAPI::get_file_id(const std::string& filename
         });
     if (matching_id != ids.end())
         return *matching_id;
-    return FailureReason::FileNotFound;
+    return APIFailureReason::FileNotFound;
 }
 
-either<Success, FailureReason> BinaryAPI::write_file(const File& file)
+either<Success, APIFailureReason> BinaryAPI::write_file(const File& file)
 {
     _device << Command::WriteFile << file;
 
@@ -85,14 +85,14 @@ either<Success, FailureReason> BinaryAPI::write_file(const File& file)
     return convert_status(status);
 }
 
-either<File, FailureReason> BinaryAPI::read_file(const std::string& filename)
+either<File, APIFailureReason> BinaryAPI::read_file(const std::string& filename)
 {
     return get_file_id(filename)
         .match(
-            [&] (const auto& id) -> either<File, FailureReason> {
+            [&] (const auto& id) -> either<File, APIFailureReason> {
                 return wait_ready()
                     .match(
-                        [&] (auto&&) -> either<File, FailureReason> {
+                        [&] (auto&&) -> either<File, APIFailureReason> {
                             _device << Command::ReadFile << id;
 
                             CommandStatus status;
@@ -125,11 +125,11 @@ std::vector<FileId> BinaryAPI::list_ids()
     return output;
 }
 
-either<std::vector<std::string>, FailureReason> BinaryAPI::list_files()
+either<std::vector<std::string>, APIFailureReason> BinaryAPI::list_files()
 {
     auto ids = list_ids();
     auto filenames = std::vector<std::string>();
-    auto failure = FailureReason::UnknownFailure;
+    auto failure = APIFailureReason::UnknownFailure;
     for (auto& id : ids)
     {
         auto failed = get_filename(id)
@@ -150,14 +150,14 @@ either<std::vector<std::string>, FailureReason> BinaryAPI::list_files()
     return filenames;
 }
 
-either<Success, FailureReason> BinaryAPI::remove_file(const std::string& filename)
+either<Success, APIFailureReason> BinaryAPI::remove_file(const std::string& filename)
 {
     return get_file_id(filename)
         .match(
-            [&] (const auto& id) -> either<Success, FailureReason> {
+            [&] (const auto& id) -> either<Success, APIFailureReason> {
                 return wait_ready()
                     .match(
-                        [&] (auto&&) -> either<Success, FailureReason> {
+                        [&] (auto&&) -> either<Success, APIFailureReason> {
                             _device << Command::RemoveFile << id;
                             CommandStatus status;
                             _device >> status;
@@ -172,9 +172,9 @@ either<Success, FailureReason> BinaryAPI::remove_file(const std::string& filenam
             [] (auto&& failure) -> either<Success, FailureReason> { return failure; });
 }
 
-either<Success, FailureReason> BinaryAPI::format(const std::string& iv)
+either<Success, APIFailureReason> BinaryAPI::format(const std::string& iv, const std::string& challenge)
 {
-    _device << Command::Format << iv;
+    _device << Command::Format << iv << challenge;
     CommandStatus status;
     _device >> status;
 
@@ -183,7 +183,7 @@ either<Success, FailureReason> BinaryAPI::format(const std::string& iv)
     return Success{};
 }
 
-either<MasterBlock, FailureReason> BinaryAPI::get_master_block()
+either<MasterBlock, APIFailureReason> BinaryAPI::get_master_block()
 {
     _device << Command::GetMasterBlock;
     auto master_block = MasterBlock();

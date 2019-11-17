@@ -11,10 +11,11 @@ ap::ArgumentParser<Arguments> createArgumentParser()
     using namespace std::string_literals;
 
     return ap::ArgumentParserBuilder<Arguments>()
-        .add_positional(
+        .add_optional(
             "device"s,
             &Arguments::device,
-            ""s,
+            "/dev/ttyUSB0"s,
+            { "-d"s, "--device"s },
             "Serial device to connect to"s)
         .add_optional(
             "baud"s,
@@ -44,7 +45,7 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             "remove"s,
             &Arguments::remove_file,
             ""s,
-            { "-d"s, "--remove", "--rm" },
+            { "--remove"s, "--rm"s },
             "Remove file from storage"s)
         .add_optional(
             "read"s,
