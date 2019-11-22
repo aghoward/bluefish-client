@@ -15,6 +15,10 @@ class AddFileCommand : public Command
         Encrypter& _encrypter;
         ChallengeVerifier& _challenge_verifier;
 
+        void write_file(
+            const std::string& filename,
+            const std::string& username,
+            const std::string& password);
     public:
         AddFileCommand(
             API& api,

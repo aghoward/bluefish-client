@@ -24,13 +24,13 @@ void CommandsModule::load(cdif::Container& container)
         .bind<FormatCommand, API&, FailureReasonTranslator&, Encrypter&>()
         .build();
     container
-        .bind<ListFilesCommand, API&, FailureReasonTranslator&>()
+        .bind<ListFilesCommand, API&, FailureReasonTranslator&, ChallengeVerifier&, Decrypter&>()
         .build();
     container
-        .bind<ReadFileCommand, API&, FailureReasonTranslator&, Decrypter&>()
+        .bind<ReadFileCommand, API&, FailureReasonTranslator&, Encrypter&, Decrypter&, ChallengeVerifier&>()
         .build();
     container
-        .bind<RemoveFileCommand, API&, FailureReasonTranslator&>()
+        .bind<RemoveFileCommand, API&, FailureReasonTranslator&, ChallengeVerifier&, Encrypter&>()
         .build();
     container
         .bind<PrintUsageCommand, API&, FailureReasonTranslator&>()

@@ -45,7 +45,7 @@ std::string askpass(const std::string& prompt)
     toggle_tty_echo(false);
     std::getline(std::cin, password);
     toggle_tty_echo(true);
-    std::cout << std::endl;
+    std::cout << std::endl << std::endl;
 
     return password;
 }

@@ -27,7 +27,7 @@ cdif::Container create_container()
 
 int main(int argc, const char* argv[])
 {
-    std::cout << "Bluefish Password Manager" << std::endl;
+    std::cout << "Bluefish Password Manager" << std::endl << std::endl;
 
     auto parser = createArgumentParser();
     auto parseResult = parser.parse(argc, argv);
