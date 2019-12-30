@@ -27,3 +27,5 @@ ${OBJ_DIR}/%.o: %.cpp %.h ${OBJ_DIR}
 
 ${LIB_DIR}/lib%.a: ${OBJS}
 	$(AR) ${AR_FLAGS} $@ ${OBJS}
+
+.PRECIOUS: ${OBJS} ${LIB}

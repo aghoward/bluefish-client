@@ -20,11 +20,16 @@ clean:
 	make -C support clean
 	make -C commands clean
 
-${EXE}: ${EXE}.cc ${LIBS}
+install: ${EXE}
+	cp ${EXE} /usr/bin/${EXE}
+
+${EXE}: ${EXE}.cc ${LIB_DIR} ${LIBS}
 	$(GCC) ${CXX_FLAGS} ${LD_FLAGS} -o $@ $< ${LIBS}
 
 ${LIB_DIR}:
 	mkdir ${LIB_DIR}
 
-${LIB_DIR}/lib%.a: % ${LIB_DIR}
+${LIB_DIR}/lib%.a: %
 	make -C $<
+
+.PRECIOUS: ${LIBS}
