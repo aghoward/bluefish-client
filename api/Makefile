@@ -7,7 +7,7 @@ LIB_DIR =../lib
 OBJS =${OBJ_DIR}/file.o ${OBJ_DIR}/serialization.o ${OBJ_DIR}/binary_api.o ${OBJ_DIR}/wait_ready_api_decorator.o ${OBJ_DIR}/api_module.o
 LIB =${LIB_DIR}/libapi.a
 
-CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O0
+CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O3
 AR_FLAGS +=rcs
 
 all: ${LIB}

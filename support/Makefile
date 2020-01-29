@@ -7,7 +7,7 @@ LIB_DIR =../lib
 OBJS =${OBJ_DIR}/argument_parsing.o ${OBJ_DIR}/failure_reason_translator.o ${OBJ_DIR}/support_module.o ${OBJ_DIR}/askpass.o
 LIB =${LIB_DIR}/libsupport.a
 
-CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O0
+CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O3
 AR_FLAGS +=rcs
 
 all: ${LIB}
