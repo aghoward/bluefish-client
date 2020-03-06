@@ -11,7 +11,7 @@ OBJS =${OBJ_DIR}/add_file_command.o ${OBJ_DIR}/format_command.o \
 	  ${OBJ_DIR}/challenge_verifier.o
 LIB =${LIB_DIR}/libcommands.a
 
-CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O0
+CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O3
 AR_FLAGS +=rcs
 
 all: ${LIB}

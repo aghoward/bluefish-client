@@ -7,7 +7,7 @@ LIB_DIR =../lib
 OBJS =${OBJ_DIR}/encryption_helpers.o ${OBJ_DIR}/encryption.o ${OBJ_DIR}/encryption_module.o
 LIB =${LIB_DIR}/libencryption.a
 
-CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../cdif -I../ -O0
+CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../cdif -I../ -O3
 AR_FLAGS +=rcs
 
 all: ${LIB}

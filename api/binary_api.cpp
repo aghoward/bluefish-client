@@ -84,25 +84,17 @@ either<Success, APIFailureReason> BinaryAPI::write_file(const File& file)
 
 either<File, APIFailureReason> BinaryAPI::read_file(const std::string& filename)
 {
-    return get_file_id(filename)
-        .foldFirst(
-            [&] (const auto& id) -> either<File, APIFailureReason> {
-                return wait_ready()
-                    .foldFirst(
-                        [&] (auto&&) -> either<File, APIFailureReason> {
-                            _device << Command::ReadFile << id;
+    _device << Command::ReadFile << filename;
 
-                            CommandStatus status;
-                            _device >> status;
+    CommandStatus status;
+    _device >> status;
 
-                            if (status != CommandStatus::OK)
-                                return convert_status(status);
+    if (status != CommandStatus::OK)
+        return convert_status(status);
 
-                            File file;
-                            _device >> file;
-                            return file;
-                        });
-            });
+    File file;
+    _device >> file;
+    return file;
 }
 
 std::vector<FileId> BinaryAPI::list_ids()
