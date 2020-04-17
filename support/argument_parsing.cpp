@@ -54,6 +54,18 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             { "-r"s, "--read"s },
             "Read a file from storage"s)
         .add_optional(
+            "rename_file"s,
+            &Arguments::rename_file,
+            ""s,
+            { "-e"s, "--rename"s },
+            "Rename a file to `new_file_name`"s)
+        .add_optional(
+            "new_file_name"s,
+            &Arguments::new_file_name,
+            ""s,
+            { "-n"s, "--new-file"s },
+            "New name for file being renamed"s)
+        .add_optional(
             "format"s,
             &Arguments::format,
             false,

@@ -8,7 +8,7 @@ OBJS =${OBJ_DIR}/add_file_command.o ${OBJ_DIR}/format_command.o \
 	  ${OBJ_DIR}/list_files_command.o ${OBJ_DIR}/read_file_command.o \
 	  ${OBJ_DIR}/remove_file_command.o ${OBJ_DIR}/command_composite.o \
 	  ${OBJ_DIR}/print_usage_command.o ${OBJ_DIR}/commands_module.o \
-	  ${OBJ_DIR}/challenge_verifier.o
+	  ${OBJ_DIR}/rename_file_command.o ${OBJ_DIR}/challenge_verifier.o
 LIB =${LIB_DIR}/libcommands.a
 
 CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O3
