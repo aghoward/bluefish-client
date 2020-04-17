@@ -4,3 +4,6 @@
 [submodule "argparsing"]
 	path = argparsing
 	url = git@github.com:aghoward/argparsing.git
+[submodule "either"]
+	path = either
+	url = git@github.com:aghoward/either.git
