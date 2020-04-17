@@ -13,6 +13,10 @@ struct Arguments
 
     std::string remove_file;
     std::string read_file;
+
+    std::string rename_file;
+    std::string new_file_name;
+
     bool format;
     bool print_usage;
 };

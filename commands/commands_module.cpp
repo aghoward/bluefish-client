@@ -10,6 +10,7 @@
 #include "commands/print_usage_command.h"
 #include "commands/read_file_command.h"
 #include "commands/remove_file_command.h"
+#include "commands/rename_file_command.h"
 #include "encryption/encryption.h"
 #include "support/failure_reason_translator.h"
 
@@ -33,6 +34,9 @@ void CommandsModule::load(cdif::Container& container)
         .bind<RemoveFileCommand, API&, FailureReasonTranslator&, ChallengeVerifier&, Encrypter&>()
         .build();
     container
+        .bind<RenameFileCommand, API&, FailureReasonTranslator&, ChallengeVerifier&, Encrypter&>()
+        .build();
+    container
         .bind<PrintUsageCommand, API&, FailureReasonTranslator&>()
         .build();
 
@@ -42,6 +46,7 @@ void CommandsModule::load(cdif::Container& container)
             std::unique_ptr<RemoveFileCommand>,
             std::unique_ptr<ReadFileCommand>,
             std::unique_ptr<ListFilesCommand>,
+            std::unique_ptr<RenameFileCommand>,
             std::unique_ptr<PrintUsageCommand>>()
         .build();
 
