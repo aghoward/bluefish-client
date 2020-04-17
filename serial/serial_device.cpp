@@ -5,11 +5,20 @@
 #include <algorithm>
 #include <iostream>
 #include <utility>
+#include <sys/ioctl.h>
 
 #include <boost/bind.hpp>
 
 using namespace std;
 using namespace boost;
+
+void SerialDevice::toggleRTS()
+{
+    auto fd = port.native_handle();
+    auto data = TIOCM_RTS;
+    ioctl(fd, TIOCMBIS, &data);
+    ioctl(fd, TIOCMBIC, &data);
+}
 
 bool SerialDevice::isOpen() const
 {

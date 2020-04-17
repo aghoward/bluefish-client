@@ -36,8 +36,11 @@ public:
         port.set_option(opt_csize);
         port.set_option(opt_flow);
         port.set_option(opt_stop);
+
+        toggleRTS();
     }
 
+    void toggleRTS();
     bool isOpen() const override;
     void close() override;
     void write(const char *data, size_t size) override;
