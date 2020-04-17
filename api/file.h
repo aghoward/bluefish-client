@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "serial/io_device.h"
+#include "api/serialization.h"
 
 struct File
 {
@@ -11,5 +11,18 @@ struct File
     std::string password;
 };
 
-IODevice& operator<<(IODevice&, const File&);
-IODevice& operator>>(IODevice&, File&);
+template <typename T>
+T& operator<<(T& device, const File& file)
+{
+    using namespace bf;
+    device << file.name << file.username << file.password;
+    return device;
+}
+
+template <typename T>
+T& operator>>(T& device, File& file)
+{
+    using namespace bf;
+    device >> file.name >> file.username >> file.password;
+    return device;
+}

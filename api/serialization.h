@@ -11,8 +11,8 @@
 #include <iostream>
 
 namespace detail {
-    template <typename T>
-    void write_integral(IODevice& device, T data)
+    template <typename TDevice, typename T>
+    void write_integral(TDevice& device, T data)
     {
         char buf[sizeof(T)];
         for (auto i = 0u; i < sizeof(T); i++)
@@ -20,8 +20,8 @@ namespace detail {
         device.write(buf, sizeof(T));
     }
 
-    template <typename T>
-    T read_integral(IODevice& device)
+    template <typename TDevice, typename T>
+    T read_integral(TDevice& device)
     {
         T out;
         char buf[sizeof(T)];
@@ -29,30 +29,47 @@ namespace detail {
         memcpy(&out, buf, sizeof(T));
         return out;
     }
-
 }
 
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T> || std::is_enum_v<T>>>
-IODevice& operator<<(IODevice& device, T data)
-{
-    if constexpr (std::is_enum_v<T>)
-        detail::write_integral(device, static_cast<std::underlying_type_t<T>>(data));
-    else
-        detail::write_integral(device, data);
-    return device;
+namespace bf {
+    template <typename TDevice, typename T, typename = std::enable_if_t<std::is_integral_v<T> || std::is_enum_v<T>>>
+    TDevice& operator<<(TDevice& device, T data)
+    {
+        if constexpr (std::is_enum_v<T>)
+            detail::write_integral(device, static_cast<std::underlying_type_t<T>>(data));
+        else
+            detail::write_integral(device, data);
+        return device;
+    }
+
+    template <typename TDevice, typename T, typename = std::enable_if_t<std::is_integral_v<T> || std::is_enum_v<T>>>
+    TDevice& operator>>(TDevice& device, T& out)
+    {
+        if constexpr(std::is_enum_v<T>)
+            out = static_cast<T>(detail::read_integral<TDevice, std::underlying_type_t<T>>(device));
+        else
+            out = detail::read_integral<TDevice, T>(device);
+        return device;
+    }
+
+    template <typename TDevice>
+    TDevice& operator<<(TDevice& device, const std::string& data)
+    {
+        bf::operator<<(device, static_cast<uint16_t>(data.size()));
+        device.write(data.c_str(), data.size());
+        return device;
+    }
+
+    template <typename TDevice>
+    TDevice& operator>>(TDevice& device, std::string& data)
+    {
+        uint16_t size = 0u;
+
+        bf::operator>>(device, size);
+        std::string result(size,'\0');
+        device.read(&result[0], size);
+
+        data = result;
+        return device;
+    }
 }
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T> || std::is_enum_v<T>>>
-IODevice& operator>>(IODevice& device, T& out)
-{
-    if constexpr(std::is_enum_v<T>)
-        out = static_cast<T>(detail::read_integral<std::underlying_type_t<T>>(device));
-    else
-        out = detail::read_integral<T>(device);
-    return device;
-}
-
-IODevice& operator<<(IODevice& device, const std::string& data);
-IODevice& operator>>(IODevice& device, std::string& data);
-
-IODevice& operator>>(IODevice& device, MasterBlock& master_block);

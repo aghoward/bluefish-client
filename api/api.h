@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "api/file.h"
+#include "api/master_block.h"
 #include "either/either.h"
 
 struct Success {};
@@ -16,14 +17,6 @@ enum class APIFailureReason : uint8_t
     NotEnoughDiskSpace,
     FileNotFound,
     DeviceNotReady
-};
-
-struct MasterBlock
-{
-    uint32_t free_inodes;
-    uint32_t file_count;
-    std::string encryption_iv;
-    std::string challenge;
 };
 
 class API

@@ -2,6 +2,7 @@
 
 #include "encryption/encryption.h"
 #include "api/api.h"
+#include "api/master_block.h"
 #include "either/either.h"
 #include "support/failure_reason.h"
 #include "support/failure_reason_translator.h"

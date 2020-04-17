@@ -1,6 +1,7 @@
 #pragma once
 
 #include "api/api.h"
+#include "api/master_block.h"
 #include "commands/command.h"
 #include "commands/challenge_verifier.h"
 #include "encryption/encryption.h"

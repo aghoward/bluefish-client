@@ -2,14 +2,18 @@
 #include <string>
 #include <vector>
 
+#include "api/api.h"
 #include "api/binary_api.h"
 #include "api/file.h"
 #include "api/identifiers.h"
+#include "api/master_block.h"
 #include "api/serialization.h"
 #include "either/either.h"
 
 #include <iostream>
 #include <type_traits>
+
+using namespace bf;
 
 APIFailureReason convert_status(CommandStatus status)
 {

@@ -4,6 +4,7 @@
 
 #include "either/either.h"
 #include "api/api.h"
+#include "api/master_block.h"
 #include "support/failure_reason.h"
 
 either<MasterBlock, FailureReason> ChallengeVerifier::verify(std::string&& password)
