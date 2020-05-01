@@ -1,7 +1,8 @@
-
 #include "api/file.h"
 #include "api/serialization.h"
 #include "serial/io_device.h"
+
+using namespace bf;
 
 IODevice& operator<<(IODevice& device, const File& file)
 {

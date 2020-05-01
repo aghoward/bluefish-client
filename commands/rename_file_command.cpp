@@ -1,6 +1,7 @@
 #include "commands/rename_file_command.h"
 
 #include "api/api.h"
+#include "api/master_block.h"
 #include "support/arguments.h"
 #include "support/askpass.h"
 

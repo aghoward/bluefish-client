@@ -1,5 +1,6 @@
 #include "commands/read_file_command.h"
 
+#include "api/master_block.h"
 #include "support/arguments.h"
 #include "support/askpass.h"
 #include "support/failure_reason_translator.h"

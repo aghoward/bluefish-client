@@ -16,6 +16,7 @@ all: ${EXE}
 clean:
 	rm -Rf ${EXE} ${OBJ_DIR} ${LIB_DIR}
 	make -C serial clean
+	make -C encryption clean
 	make -C api clean
 	make -C support clean
 	make -C commands clean

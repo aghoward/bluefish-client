@@ -3,6 +3,7 @@
 #include "api/api.h"
 #include "api/file.h"
 #include "api/identifiers.h"
+#include "api/master_block.h"
 #include "either/either.h"
 #include "serial/io_device.h"
 

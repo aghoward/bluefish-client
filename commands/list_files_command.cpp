@@ -1,6 +1,7 @@
 #include "commands/list_files_command.h"
 
 #include "api/api.h"
+#include "api/master_block.h"
 #include "encryption/encryption_helpers.h"
 #include "support/arguments.h"
 #include "support/askpass.h"

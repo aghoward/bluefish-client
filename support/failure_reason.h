@@ -8,5 +8,7 @@ enum class FailureReason
     FileNotFound,
     DeviceNotReady,
     InvalidPassword,
-    PasswordsDoNotMatch
+    PasswordsDoNotMatch,
+    CannotOpenFileFromDisk,
+    BackupFileCorrupt
 };

@@ -4,31 +4,37 @@
 #include "api/master_block.h"
 #include "commands/command.h"
 #include "commands/challenge_verifier.h"
-#include "encryption/encryption.h"
+#include "either/either.h"
 #include "support/arguments.h"
 #include "support/failure_reason_translator.h"
+#include "support/failure_reason.h"
 
-class ListFilesCommand : public Command
+#include <string>
+#include <vector>
+
+class CreateBackupCommand : public Command
 {
     private:
         API& _api;
         FailureReasonTranslator& _failure_reason_translator;
         ChallengeVerifier& _challenge_verifier;
-        Decrypter& _decrypter;
 
-        void list_files(
-            const MasterBlock& master_block,
-            std::string&& master_password,
-            const std::vector<std::string>& encrypted_filenames);
-
+        either<std::string, FailureReason> write_file(
+            const MasterBlock& mb,
+            const std::vector<File>& files,
+            const std::string& filename) const;
     public:
-        ListFilesCommand(API& api, FailureReasonTranslator& frt, ChallengeVerifier& cv, Decrypter& dec)
+        CreateBackupCommand(
+            API& api,
+            FailureReasonTranslator& frt,
+            ChallengeVerifier& cv)
             :
             _api(api),
             _failure_reason_translator(frt),
-            _challenge_verifier(cv),
-            _decrypter(dec)
+            _challenge_verifier(cv)
         {}
+
         void execute(const Arguments& arguments) override;
         bool matches(const Arguments& arguments) const override;
 };
+

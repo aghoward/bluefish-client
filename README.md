@@ -39,7 +39,7 @@ $ make
 ## Usage
 
 ```
-Usage: bluefish [-d|--device <device>] [-b|--baud <baud>] [-l|--list] [-a|--add <add_file>] [-u|--username <username>] [--remove|--rm <remove>] [-r|--read <read>] [-f|--format] [-p|--print-usage]
+Usage: ./bluefish [-d|--device <device>] [-b|--baud <baud>] [-l|--list] [-a|--add <add_file>] [-u|--username <username>] [--remove|--rm <remove>] [-r|--read <read>] [-e|--rename <rename_file>] [-n|--new-file <new_file_name>] [-f|--format] [-p|--print-usage] [--backup <backup_file>] [--restore <restore_file>]
 ```
 
 
@@ -125,6 +125,34 @@ command line, before the file is decrypted and read.
 removing the file from the device; there really isn't anyway to ensure another
 client won't just allow anyone to delete files (though they wouldn't know what
 the filenames were).
+
+
+### Renaming a file
+
+`-e|--rename <rename_file> -n|--new-file <new_file_name>` - Renames `rename_file`
+to `new_file_name`.
+
+Just what it sounds like, this renames a file without modifying its contents,
+other than the filename.
+
+
+### Backup device contents to file
+
+`--backup <backup_file>` - backs up all data on the device to the local file
+`backup_file`.
+
+This will create a local file `backup_file` containing all the contents of the
+storage on the bluefish device. Don't worry this local file is encrypted just
+the same as the device itself is, so even if a bad actor got ahold of it, they
+can't read the contents without your master password.
+
+
+## Restoring a backup file
+
+`--restore <restore_file>` - Restores the contents of a backup file to the device
+
+This will overwrite any data currently on the device, but it will prompt you
+first to make sure this is really what you want to do.
 
 
 ### How much storage is left?
