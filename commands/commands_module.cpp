@@ -5,12 +5,14 @@
 #include "commands/challenge_verifier.h"
 #include "commands/command_composite.h"
 #include "commands/command.h"
+#include "commands/create_backup_command.h"
 #include "commands/format_command.h"
 #include "commands/list_files_command.h"
 #include "commands/print_usage_command.h"
 #include "commands/read_file_command.h"
 #include "commands/remove_file_command.h"
 #include "commands/rename_file_command.h"
+#include "commands/restore_backup_command.h"
 #include "encryption/encryption.h"
 #include "support/failure_reason_translator.h"
 
@@ -39,6 +41,12 @@ void CommandsModule::load(cdif::Container& container)
     container
         .bind<PrintUsageCommand, API&, FailureReasonTranslator&>()
         .build();
+    container
+        .bind<CreateBackupCommand, API&, FailureReasonTranslator&, ChallengeVerifier&>()
+        .build();
+    container
+        .bind<RestoreBackupCommand, API&, FailureReasonTranslator&>()
+        .build();
 
     container.bindList<std::unique_ptr<Command>,
             std::unique_ptr<FormatCommand>,
@@ -47,7 +55,9 @@ void CommandsModule::load(cdif::Container& container)
             std::unique_ptr<ReadFileCommand>,
             std::unique_ptr<ListFilesCommand>,
             std::unique_ptr<RenameFileCommand>,
-            std::unique_ptr<PrintUsageCommand>>()
+            std::unique_ptr<PrintUsageCommand>,
+            std::unique_ptr<CreateBackupCommand>,
+            std::unique_ptr<RestoreBackupCommand>>()
         .build();
 
     container

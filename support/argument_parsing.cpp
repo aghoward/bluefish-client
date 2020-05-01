@@ -77,6 +77,18 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             false,
             { "-p"s, "--print-usage"s },
             "Print disk usage"s)
+        .add_optional(
+            "backup_file"s,
+            &Arguments::backup_file,
+            ""s,
+            { "--backup"s },
+            "Backup data from device to local filesystem"s)
+        .add_optional(
+            "restore_file"s,
+            &Arguments::restore_file,
+            ""s,
+            { "--restore"s },
+            "Restore backup file to device"s)
         .build();
 }
 

@@ -24,6 +24,10 @@ std::string FailureReasonTranslator::to_string(const FailureReason& failure_reas
         return "Invalid password"s;
     if (failure_reason == FailureReason::PasswordsDoNotMatch)
         return "Passwords do not match"s;
+    if (failure_reason == FailureReason::CannotOpenFileFromDisk)
+        return "Cannot open local file on disk"s;
+    if (failure_reason == FailureReason::BackupFileCorrupt)
+        return "Backup file appears to be corrupt"s;
     return "Unimplemented error"s;
 }
 

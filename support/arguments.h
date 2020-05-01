@@ -19,5 +19,8 @@ struct Arguments
 
     bool format;
     bool print_usage;
+
+    std::string backup_file;
+    std::string restore_file;
 };
 
