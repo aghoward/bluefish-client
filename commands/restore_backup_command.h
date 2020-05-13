@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commands/command.h"
+#include "commands/models/backup_file_dto.h"
 #include "api/api.h"
 #include "api/file.h"
 #include "api/master_block.h"
@@ -12,13 +13,6 @@
 
 #include <vector>
 
-namespace detail {
-    struct BackupFileDTO {
-        MasterBlock master_block;
-        std::vector<File> files;
-    };
-}
-
 class RestoreBackupCommand : public Command
 {
     private:
@@ -26,7 +20,6 @@ class RestoreBackupCommand : public Command
         FailureReasonTranslator& _failure_reason_translator;
 
         bool query_user_confidence() const;
-        either<detail::BackupFileDTO, FailureReason> read_backup_file(const std::string& filename) const;
         either<Success, APIFailureReason> write_files(const std::vector<File>& files);
 
     public:

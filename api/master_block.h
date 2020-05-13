@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 
+namespace bf {}
+
 struct MasterBlock
 {
     uint32_t free_inodes;

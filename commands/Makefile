@@ -17,8 +17,10 @@ CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I../ -I../cdif -O3
 AR_FLAGS +=rcs
 
 all: ${LIB}
+	make -C common
 
 clean:
+	make -C common clean
 	rm -Rf ${OBJ_DIR} ${LIB}
 
 ${OBJ_DIR}:

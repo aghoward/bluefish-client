@@ -3,6 +3,8 @@
 #include "api/api.h"
 #include "api/file.h"
 #include "api/master_block.h"
+#include "commands/common/read_backup_file.h"
+#include "commands/models/backup_file_dto.h"
 #include "support/arguments.h"
 #include "support/failure_reason.h"
 #include "encryption/encryption_helpers.h"
@@ -31,34 +33,6 @@ bool RestoreBackupCommand::query_user_confidence() const
     return response == "yes"s;
 }
 
-either<detail::BackupFileDTO, FailureReason> RestoreBackupCommand::read_backup_file(const std::string& filename) const
-{
-    using namespace bf;
-
-    detail::BackupFileDTO output;
-    uint16_t fileCount, fileIndex;
-
-    std::ifstream fd(filename, std::ios::binary);
-    if (!fd.is_open())
-        return FailureReason::CannotOpenFileFromDisk;
-
-    fd >> output.master_block;
-    fd >> fileCount;
-
-    output.files = std::vector<File>(fileCount);
-    for (fileIndex = 0u; fileIndex < fileCount && fd.good() && !fd.eof(); fileIndex++)
-        fd >> output.files[fileIndex];
-
-    if (!fd.good() || (fd.eof() && fileIndex < fileCount))
-    {
-        fd.close();
-        return FailureReason::BackupFileCorrupt;
-    }
-
-    fd.close();
-    return output;
-}
-
 either<Success, APIFailureReason> RestoreBackupCommand::write_files(const std::vector<File>& files)
 {
     for (const auto& file : files)
@@ -79,9 +53,9 @@ void RestoreBackupCommand::execute(const Arguments& args)
     if (!query_user_confidence())
         return;
 
-    detail::BackupFileDTO data;
+    BackupFileDTO data;
 
-    read_backup_file(args.restore_file)
+    bf::read_backup_file(args.restore_file)
         .foldFirst([&] (const auto& backup_data) {
             data = backup_data;
             return _api.format(data.master_block.encryption_iv, data.master_block.challenge)
