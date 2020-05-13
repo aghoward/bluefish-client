@@ -89,6 +89,12 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             ""s,
             { "--restore"s },
             "Restore backup file to device"s)
+        .add_optional(
+            "verify_backup"s,
+            &Arguments::verify,
+            ""s,
+            { "--verify"s },
+            "Verify a backup file"s)
         .build();
 }
 

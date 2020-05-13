@@ -22,5 +22,6 @@ struct Arguments
 
     std::string backup_file;
     std::string restore_file;
+    std::string verify;
 };
 

@@ -13,6 +13,7 @@
 #include "commands/remove_file_command.h"
 #include "commands/rename_file_command.h"
 #include "commands/restore_backup_command.h"
+#include "commands/verify_backup_command.h"
 #include "encryption/encryption.h"
 #include "support/failure_reason_translator.h"
 
@@ -47,6 +48,9 @@ void CommandsModule::load(cdif::Container& container)
     container
         .bind<RestoreBackupCommand, API&, FailureReasonTranslator&>()
         .build();
+    container
+        .bind<VerifyBackupCommand, FailureReasonTranslator&>()
+        .build();
 
     container.bindList<std::unique_ptr<Command>,
             std::unique_ptr<FormatCommand>,
@@ -57,7 +61,8 @@ void CommandsModule::load(cdif::Container& container)
             std::unique_ptr<RenameFileCommand>,
             std::unique_ptr<PrintUsageCommand>,
             std::unique_ptr<CreateBackupCommand>,
-            std::unique_ptr<RestoreBackupCommand>>()
+            std::unique_ptr<RestoreBackupCommand>,
+            std::unique_ptr<VerifyBackupCommand>>()
         .build();
 
     container
