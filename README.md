@@ -39,7 +39,7 @@ $ make
 ## Usage
 
 ```
-Usage: ./bluefish [-d|--device <device>] [-b|--baud <baud>] [-l|--list] [-a|--add <add_file>] [-u|--username <username>] [--remove|--rm <remove>] [-r|--read <read>] [-e|--rename <rename_file>] [-n|--new-file <new_file_name>] [-f|--format] [-p|--print-usage] [--backup <backup_file>] [--restore <restore_file>]
+Usage: ./bluefish [-d|--device <device>] [-b|--baud <baud>] [-l|--list] [-a|--add <filename>] [-u|--username <username>] [--remove|--rm <filename>] [-r|--read <filename>] [-A|--rename <rename_from>] [-n|--new-file <rename_to>] [-U|--change-username <filename>] [-P|--change-password <filename>] [-f|--format] [-p|--print-usage] [--backup <filename>] [--restore <filename>] [--verify <filename>]
 ```
 
 
@@ -95,7 +95,7 @@ as well as their contents.
 `-a|--add <filename>` - Specifies the filename for the file to add. This needs
 to be used with the `-u|--username` flag.
 
-`-u|--username <useranme>` - Specifies the username portion of the credentials
+`-u|--username <username>` - Specifies the username portion of the credentials
 to associate with this file.
 
 After specifying these two flags and values, you'll be asked for the password
@@ -129,16 +129,34 @@ the filenames were).
 
 ### Renaming a file
 
-`-e|--rename <rename_file> -n|--new-file <new_file_name>` - Renames `rename_file`
-to `new_file_name`.
+`-A|--rename <rename_from> -n|--new-file <rename_to>` - Renames `rename_from`
+to `rename_to`.
 
 Just what it sounds like, this renames a file without modifying its contents,
 other than the filename.
 
 
+### Changing a username
+
+`-U|--change-username <filename> -u|--username <username>` - Changes the
+username for the file `filename` to `username`.
+
+Allows you to change the username of a file. You will be prompted for the
+master password.
+
+
+### Changing a password
+
+`-P|--change-password <filename>` - Changes the password for the
+file `filename`.
+
+Allows you to change the password of a filename. You will be prompted for the
+master password and the new password.
+
+
 ### Backup device contents to file
 
-`--backup <backup_file>` - backs up all data on the device to the local file
+`--backup <filename>` - backs up all data on the device to the local file
 `backup_file`.
 
 This will create a local file `backup_file` containing all the contents of the
@@ -147,12 +165,21 @@ the same as the device itself is, so even if a bad actor got ahold of it, they
 can't read the contents without your master password.
 
 
-## Restoring a backup file
+### Restoring a backup file
 
-`--restore <restore_file>` - Restores the contents of a backup file to the device
+`--restore <filename>` - Restores the contents of a backup file to the device
 
 This will overwrite any data currently on the device, but it will prompt you
 first to make sure this is really what you want to do.
+
+
+### Verifying a backup file
+
+`--verify <filename>` - Verify the contents of a backup file to ensure it
+is not corrupt.
+
+This will print some general information about the file if it is intact, and an
+error message otherwise.
 
 
 ### How much storage is left?
