@@ -141,21 +141,23 @@ either<std::vector<std::string>, APIFailureReason> BinaryAPI::list_files()
 
 either<Success, APIFailureReason> BinaryAPI::remove_file(const std::string& filename)
 {
+    FileId file_id;
     return get_file_id(filename)
         .foldFirst(
             [&] (const auto& id) -> either<Success, APIFailureReason> {
-                return wait_ready()
-                    .foldFirst(
-                        [&] (auto&&) -> either<Success, APIFailureReason> {
-                            _device << Command::RemoveFile << id;
-                            CommandStatus status;
-                            _device >> status;
+                file_id = id;
+                return wait_ready();
+            })
+        .foldFirst(
+            [&] (auto&&) -> either<Success, APIFailureReason> {
+                _device << Command::RemoveFile << file_id;
+                CommandStatus status;
+                _device >> status;
 
-                            if (status != CommandStatus::OK)
-                                return convert_status(status);
+                if (status != CommandStatus::OK)
+                    return convert_status(status);
 
-                            return Success{};
-                        });
+                return Success{};
             });
 }
 

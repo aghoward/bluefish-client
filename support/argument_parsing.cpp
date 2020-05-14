@@ -30,7 +30,7 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             { "-l"s, "--list"s },
             "List files from device"s)
         .add_optional(
-            "add_file"s,
+            "filename"s,
             &Arguments::add_file,
             ""s,
             { "-a"s, "--add"s },
@@ -40,31 +40,43 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             &Arguments::username,
             ""s,
             { "-u"s, "--username"s },
-            "Username for file to add (used with --add)"s)
+            "Username for file to add. Use in conjuction with -a|--add"s)
         .add_optional(
-            "remove"s,
+            "filename"s,
             &Arguments::remove_file,
             ""s,
             { "--remove"s, "--rm"s },
             "Remove file from storage"s)
         .add_optional(
-            "read"s,
+            "filename"s,
             &Arguments::read_file,
             ""s,
             { "-r"s, "--read"s },
             "Read a file from storage"s)
         .add_optional(
-            "rename_file"s,
+            "rename_from"s,
             &Arguments::rename_file,
             ""s,
-            { "-e"s, "--rename"s },
-            "Rename a file to `new_file_name`"s)
+            { "-A"s, "--rename"s },
+            "Renames a file from `rename_from` to `rename_to`. Use in conjuction with -n|--new-file"s)
         .add_optional(
-            "new_file_name"s,
+            "rename_to"s,
             &Arguments::new_file_name,
             ""s,
             { "-n"s, "--new-file"s },
-            "New name for file being renamed"s)
+            "New name for file being renamed. Use in conjuction with -A|--rename"s)
+        .add_optional(
+            "filename"s,
+            &Arguments::change_username_file,
+            ""s,
+            { "-U"s, "--change-username"s },
+            "Change username for given file. Use in conjuction with -u|--username"s)
+        .add_optional(
+            "filename"s,
+            &Arguments::change_password_file,
+            ""s,
+            { "-P"s, "--change-password"s },
+            "Change password for given file"s)
         .add_optional(
             "format"s,
             &Arguments::format,
@@ -78,19 +90,19 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             { "-p"s, "--print-usage"s },
             "Print disk usage"s)
         .add_optional(
-            "backup_file"s,
+            "filename"s,
             &Arguments::backup_file,
             ""s,
             { "--backup"s },
             "Backup data from device to local filesystem"s)
         .add_optional(
-            "restore_file"s,
+            "filename"s,
             &Arguments::restore_file,
             ""s,
             { "--restore"s },
             "Restore backup file to device"s)
         .add_optional(
-            "verify_backup"s,
+            "filename"s,
             &Arguments::verify,
             ""s,
             { "--verify"s },
