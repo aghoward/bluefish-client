@@ -16,6 +16,8 @@ struct Arguments
 
     std::string rename_file;
     std::string new_file_name;
+    std::string change_password_file;
+    std::string change_username_file;
 
     bool format;
     bool print_usage;

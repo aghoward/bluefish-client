@@ -3,6 +3,8 @@
 #include "cdif/cdif.h"
 #include "commands/add_file_command.h"
 #include "commands/challenge_verifier.h"
+#include "commands/change_username_command.h"
+#include "commands/change_password_command.h"
 #include "commands/command_composite.h"
 #include "commands/command.h"
 #include "commands/create_backup_command.h"
@@ -51,6 +53,12 @@ void CommandsModule::load(cdif::Container& container)
     container
         .bind<VerifyBackupCommand, FailureReasonTranslator&>()
         .build();
+    container
+        .bind<ChangePasswordCommand, API&, FailureReasonTranslator&, ChallengeVerifier&, Encrypter&>()
+        .build();
+    container
+        .bind<ChangeUsernameCommand, API&, FailureReasonTranslator&, ChallengeVerifier&, Encrypter&>()
+        .build();
 
     container.bindList<std::unique_ptr<Command>,
             std::unique_ptr<FormatCommand>,
@@ -62,7 +70,9 @@ void CommandsModule::load(cdif::Container& container)
             std::unique_ptr<PrintUsageCommand>,
             std::unique_ptr<CreateBackupCommand>,
             std::unique_ptr<RestoreBackupCommand>,
-            std::unique_ptr<VerifyBackupCommand>>()
+            std::unique_ptr<VerifyBackupCommand>,
+            std::unique_ptr<ChangePasswordCommand>,
+            std::unique_ptr<ChangeUsernameCommand>>()
         .build();
 
     container

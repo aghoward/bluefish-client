@@ -66,6 +66,18 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             { "-n"s, "--new-file"s },
             "New name for file being renamed"s)
         .add_optional(
+            "filename"s,
+            &Arguments::change_username_file,
+            ""s,
+            { "-U"s, "--change-username"s },
+            "Change username for given file. Use in conjuction with -u|--username"s)
+        .add_optional(
+            "filename"s,
+            &Arguments::change_password_file,
+            ""s,
+            { "-P"s, "--change-password"s },
+            "Change password for given file"s)
+        .add_optional(
             "format"s,
             &Arguments::format,
             false,
