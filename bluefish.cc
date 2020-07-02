@@ -31,26 +31,33 @@ int main(int argc, const char* argv[])
 
     auto parser = createArgumentParser();
     auto parseResult = parser.parse(argc, argv);
-    if (!parseResult)
-    {
-        std::cerr << parser.usage(argv[0]) << std::endl;
-        return 1;
-    }
 
-    auto arguments = parseResult.value();
+    return parseResult.match(
+        [&] (const auto& arguments) {
+            if (arguments.print_help)
+            {
+                std::cout << parser.help(argv[0]) << std::endl;
+                return 0;
+            }
 
-    auto container = create_container();
-    auto& args = container.resolve<Arguments&>();
-    args = arguments;
+            auto container = create_container();
+            auto& args = container.resolve<Arguments&>();
+            args = arguments;
 
-    auto command = container.resolve<std::unique_ptr<Command>>();
+            auto command = container.resolve<std::unique_ptr<Command>>();
 
-    if (!command->matches(arguments))
-    {
-        std::cout << "invalid argument configuration" << std::endl;
-        return 1;
-    }
+            if (!command->matches(arguments))
+            {
+                std::cout << "invalid argument configuration" << std::endl;
+                return 1;
+            }
 
-    command->execute(arguments);
-    return 0;
+            command->execute(arguments);
+            return 0;
+        },
+        [&] (const auto& failure) {
+            std::cerr << parser.usage(argv[0]) << std::endl;
+            std::cerr << parser.get_error_message(failure) << std::endl;
+            return 1;
+        });
 }

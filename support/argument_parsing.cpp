@@ -12,6 +12,12 @@ ap::ArgumentParser<Arguments> createArgumentParser()
 
     return ap::ArgumentParserBuilder<Arguments>()
         .add_optional(
+            "help"s,
+            &Arguments::print_help,
+            false,
+            { "-h"s, "--help"s },
+            "Print this help message and exit"s)
+        .add_optional(
             "device"s,
             &Arguments::device,
             "/dev/ttyUSB0"s,
