@@ -4,6 +4,8 @@
 
 struct Arguments
 {
+    bool print_help;
+
     std::string device;
     uint32_t baud;
     bool list;

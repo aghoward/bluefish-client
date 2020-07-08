@@ -39,7 +39,42 @@ $ make
 ## Usage
 
 ```
-Usage: ./bluefish [-d|--device <device>] [-b|--baud <baud>] [-l|--list] [-a|--add <filename>] [-u|--username <username>] [--remove|--rm <filename>] [-r|--read <filename>] [-A|--rename <rename_from>] [-n|--new-file <rename_to>] [-U|--change-username <filename>] [-P|--change-password <filename>] [-f|--format] [-p|--print-usage] [--backup <filename>] [--restore <filename>] [--verify <filename>]
+Usage: ./bluefish [-h|--help] [-d|--device <device>] [-b|--baud <baud>] [-l|--list] [-a|--add <filename>] [-u|--username <username>] [--remove|--rm <filename>] [-r|--read <filename>] [-A|--rename <rename_from>] [-n|--new-file <rename_to>] [-U|--change-username <filename>] [-P|--change-password <filename>] [-f|--format] [-p|--print-usage] [--backup <filename>] [--restore <filename>] [--verify <filename>]
+
+    -h|--help
+                                     Print this help message and exit
+    -d|--device <device>
+                                     Serial device to connect to
+    -b|--baud <baud>
+                                     Baud rate for the device
+    -l|--list
+                                     List files from device
+    -a|--add <filename>
+                                     Add file to device storage
+    -u|--username <username>
+                                     Username for file to add. Use in conjuction with -a|--add
+    --remove|--rm <filename>
+                                     Remove file from storage
+    -r|--read <filename>
+                                     Read a file from storage
+    -A|--rename <rename_from>
+                                     Renames a file from `rename_from` to `rename_to`. Use in conjuction with -n|--new-file
+    -n|--new-file <rename_to>
+                                     New name for file being renamed. Use in conjuction with -A|--rename
+    -U|--change-username <filename>
+                                     Change username for given file. Use in conjuction with -u|--username
+    -P|--change-password <filename>
+                                     Change password for given file
+    -f|--format
+                                     Format device
+    -p|--print-usage
+                                     Print disk usage
+    --backup <filename>
+                                     Backup data from device to local filesystem
+    --restore <filename>
+                                     Restore backup file to device
+    --verify <filename>
+                                     Verify a backup file
 ```
 
 
