@@ -24,9 +24,9 @@ void CreateBackupCommand::execute(const Arguments& args)
     MasterBlock master_block;
     std::vector<File> files;
 
-    auto master_password = askpass("Master Password: ");
-    _challenge_verifier.verify(std::move(master_password))
-        .foldFirst([&] (const auto& mb) {
+    _challenge_verifier.verify()
+        .foldFirst([&] (auto&& result) {
+            auto& [mb, mp] = result;
             master_block = mb;
             return _api.list_files()
                 .mapSecond([&] (const APIFailureReason& failure) -> FailureReason {

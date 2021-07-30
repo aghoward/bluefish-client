@@ -19,12 +19,12 @@ void AddFileCommand::execute(const Arguments& arguments)
     }
 
     auto password = askpass();
-    auto master_password = askpass("Master Password: ");
 
-    _challenge_verifier.verify(std::string(master_password))
+    _challenge_verifier.verify()
         .match(
-            [&] (const auto& master_block)
+            [&] (auto&& result)
             {
+                auto& [master_block, master_password] = result;
                 auto encrypted_filename = _encrypter.encrypt(
                         std::string(arguments.add_file),
                         std::string(master_password),

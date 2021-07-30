@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <tuple>
 
 bool ChangePasswordCommand::matches(const Arguments& arguments) const
 {
@@ -16,14 +17,13 @@ bool ChangePasswordCommand::matches(const Arguments& arguments) const
 
 void ChangePasswordCommand::execute(const Arguments& arguments)
 {
-    auto master_password = askpass("Master Password: ");
-
     MasterBlock master_block;
     std::string filename;
     File new_file;
 
-    _challenge_verifier.verify(std::string(master_password))
-        .foldFirst([&] (const auto& mb) {
+    _challenge_verifier.verify()
+        .foldFirst([&] (auto&& result) {
+            auto& [mb, master_password] = result;
             master_block = mb;
 
             filename = _encrypter.encrypt(
@@ -32,12 +32,15 @@ void ChangePasswordCommand::execute(const Arguments& arguments)
                 master_block.encryption_iv);
 
             return _api.read_file(filename)
-                .mapSecond(
+                .mapFirst(
+                    [&] (const auto& file) { return std::make_tuple(file, std::move(master_password)); }
+                ).mapSecond(
                     [&] (const APIFailureReason& failure) -> FailureReason {
                         return _failure_reason_translator.translate(failure);
                 });
         })
-        .foldFirst([&] (const auto& file) {
+        .foldFirst([&] (auto&& result) {
+            auto& [file, master_password] = result;
             new_file = file;
             new_file.password = _encrypter.encrypt(
                 askpass(),

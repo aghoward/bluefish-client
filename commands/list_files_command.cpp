@@ -13,10 +13,10 @@
 
 void ListFilesCommand::execute(const Arguments&)
 {
-    auto master_password = askpass("Master Password: ");
-    _challenge_verifier.verify(std::string(master_password))
+    _challenge_verifier.verify()
         .match(
-            [&] (const auto& master_block) {
+            [&] (auto&& result) {
+                auto& [master_block, master_password] = result;
                 _api.list_files()
                     .match(
                         [&] (auto&& encrypted_filenames) {
