@@ -9,14 +9,13 @@
 
 void RemoveFileCommand::execute(const Arguments& arguments)
 {
-    auto master_password = askpass("Master Password: ");
-
-    _challenge_verifier.verify(std::string(master_password))
+    _challenge_verifier.verify()
         .match(
-            [&] (const auto& master_block) {
+            [&] (auto&& result) {
+                auto& [master_block, master_password] = result;
                 auto filename = _encrypter.encrypt(
                     std::string(arguments.remove_file),
-                    std::string(master_password),
+                    std::move(master_password),
                     master_block.encryption_iv);
 
                 _api.remove_file(filename)
@@ -30,8 +29,6 @@ void RemoveFileCommand::execute(const Arguments& arguments)
             [&] (const auto& failure_reason) {
                 std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
             });
-
-    clear_data(master_password);
 }
 
 bool RemoveFileCommand::matches(const Arguments& arguments) const

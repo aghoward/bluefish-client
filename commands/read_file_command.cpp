@@ -10,11 +10,11 @@
 
 void ReadFileCommand::execute(const Arguments& arguments)
 {
-    auto master_password = askpass("Master Password: ");
-    _challenge_verifier.verify(std::string(master_password))
+    _challenge_verifier.verify()
         .match(
-            [&] (const auto& master_block)
+            [&] (auto&& result)
             {
+                auto& [master_block, master_password] = result;
                 auto filename = _encrypter.encrypt(
                     std::string(arguments.read_file),
                     std::string(master_password),

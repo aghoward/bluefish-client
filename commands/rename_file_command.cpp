@@ -16,12 +16,11 @@ bool RenameFileCommand::matches(const Arguments& arguments) const
 
 void RenameFileCommand::execute(const Arguments& arguments)
 {
-    auto master_password = askpass("Master Password: ");
-
     MasterBlock master_block;
 
-    _challenge_verifier.verify(std::string(master_password))
-        .foldFirst([&] (const auto& mb) {
+    _challenge_verifier.verify()
+        .foldFirst([&] (auto&& result) {
+            auto& [mb, master_password] = result;
             master_block = mb;
 
             auto filename = _encrypter.encrypt(
@@ -30,12 +29,15 @@ void RenameFileCommand::execute(const Arguments& arguments)
                 master_block.encryption_iv);
 
             return _api.read_file(filename)
-                .mapSecond(
+                .mapFirst(
+                    [&] (const auto& file) { return std::make_tuple(file, master_password); }
+                ).mapSecond(
                     [&] (const APIFailureReason& failure) -> FailureReason {
                         return _failure_reason_translator.translate(failure);
                 });
         })
-        .foldFirst([&] (const auto& file) {
+        .foldFirst([&] (auto&& result) {
+            auto& [file, master_password] = result;
             auto new_file = file;
             auto new_file_name = _encrypter.encrypt(
                 std::string(arguments.new_file_name),
@@ -44,15 +46,16 @@ void RenameFileCommand::execute(const Arguments& arguments)
             new_file.name = new_file_name;
 
             return _api.write_file(new_file)
+                .mapFirst([&] (const auto&) { return std::move(master_password); })
                 .mapSecond(
                     [&] (const APIFailureReason& failure) -> FailureReason {
                         return _failure_reason_translator.translate(failure);
                 });
         })
-        .foldFirst([&] (const auto&) {
+        .foldFirst([&] (auto&& master_password) {
             auto filename = _encrypter.encrypt(
                 std::string(arguments.rename_file),
-                std::string(master_password),
+                std::move(master_password),
                 master_block.encryption_iv);
 
             return _api.remove_file(filename)
