@@ -9,8 +9,6 @@
 #include "either/either.h"
 
 struct Success {};
-struct MasterBlock;
-struct File;
 
 enum class APIFailureReason : uint8_t
 {

@@ -1,4 +1,6 @@
 #include "api/file.h"
+#include "api/master_block.h"
+#include "api/serialization.h"
 #include "commands/models/backup_file_dto.h"
 #include "either/either.h"
 #include "support/failure_reason.h"

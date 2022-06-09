@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-#include "serial/io_device.h"
 #include "api/serialization.h"
+#include "serial/io_device.h"
 
 enum class IdentifierType
 {
@@ -26,12 +26,14 @@ class Identifier
 template <IdentifierType T>
 IODevice& operator<<(IODevice& stream, const Identifier<T>& id)
 {
+    using namespace bf;
     return stream << id.value;
 }
 
 template <IdentifierType T>
 IODevice& operator>>(IODevice& stream, Identifier<T>& id)
 {
+    using namespace bf;
     return stream >> id.value;
 }
 
