@@ -1,20 +1,17 @@
 #pragma once
 
-#include "commands/command.h"
-#include "support/arguments.h"
-#include "support/failure_reason_translator.h"
+#include <string>
 
-class VerifyBackupCommand : public Command
+#include "commands/models/backup_file_dto.h"
+#include "either/either.h"
+#include "support/failure_reason.h"
+
+class VerifyBackupCommand
 {
-    private:
-        FailureReasonTranslator& _failure_reason_translator;
-
     public:
-        explicit VerifyBackupCommand(FailureReasonTranslator& frt)
-            : _failure_reason_translator(frt)
+        VerifyBackupCommand()
         {}
 
-        bool matches(const Arguments& args) const override;
-        void execute(const Arguments& args) override;
+        either<BackupFileDTO, RestoreBackupFailure> execute(const std::string& filename);
 };
 

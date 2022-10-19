@@ -1,23 +1,24 @@
 #include <cstdint>
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 
-#include "cdif/cdif.h"
 #include "api/api_module.h"
+#include "cdif/cdif.h"
 #include "commands/commands_module.h"
 #include "encryption/encryption_module.h"
 #include "serial/serial_module.h"
-#include "support/support_module.h"
-
 #include "support/argument_parsing.h"
 #include "support/arguments.h"
-#include "commands/command.h"
+#include "support/support_module.h"
+#include "ui/console/commands/command.h"
+#include "ui/console/commands/commands_module.h"
 
 cdif::Container create_container()
 {
     auto container = cdif::Container();
     container.registerModule<CommandsModule>();
+    container.registerModule<bf::ui::console::commands::CommandsModule>();
     container.registerModule<APIModule>();
     container.registerModule<SerialModule>();
     container.registerModule<SupportModule>();
@@ -27,6 +28,8 @@ cdif::Container create_container()
 
 int main(int argc, const char* argv[])
 {
+    using Command = typename bf::ui::console::commands::Command;
+
     std::cout << "Bluefish Password Manager" << std::endl << std::endl;
 
     auto parser = createArgumentParser();

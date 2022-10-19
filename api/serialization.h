@@ -1,14 +1,13 @@
 #pragma once
 
 #include <cstring>
+#include <iostream>
 #include <string>
 #include <type_traits>
 
-#include "serial/io_device.h"
-#include "api/file.h"
 #include "api/api.h"
-
-#include <iostream>
+#include "api/file.h"
+#include "serial/io_device.h"
 
 namespace detail {
     template <typename TDevice, typename T>
@@ -29,6 +28,15 @@ namespace detail {
         memcpy(&out, buf, sizeof(T));
         return out;
     }
+
+    template <typename T>
+    struct remove_cvref
+    {
+        typedef std::remove_cv_t<std::remove_reference_t<T>> type;
+    };
+
+    template <typename T>
+    using remove_cvref_t = typename remove_cvref<T>::type;
 }
 
 namespace bf {
@@ -52,7 +60,15 @@ namespace bf {
         return device;
     }
 
-    template <typename TDevice>
+    template <
+        typename TDevice,
+        typename = std::enable_if_t<
+            !std::is_same_v<
+                detail::remove_cvref_t<TDevice>,
+                detail::remove_cvref_t<decltype(std::cout)>
+            >
+        >
+    >
     TDevice& operator<<(TDevice& device, const std::string& data)
     {
         bf::operator<<(device, static_cast<uint16_t>(data.size()));

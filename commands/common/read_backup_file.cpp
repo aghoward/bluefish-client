@@ -1,3 +1,8 @@
+#include <cstdint>
+#include <fstream>
+#include <string>
+#include <vector>
+
 #include "api/file.h"
 #include "api/master_block.h"
 #include "api/serialization.h"
@@ -5,13 +10,8 @@
 #include "either/either.h"
 #include "support/failure_reason.h"
 
-#include <fstream>
-#include <cstdint>
-#include <string>
-#include <vector>
-
 namespace bf {
-    either<BackupFileDTO, FailureReason> read_backup_file(const std::string& filename)
+    either<BackupFileDTO, RestoreBackupFailure> read_backup_file(const std::string& filename)
     {
         using namespace bf;
 
@@ -20,7 +20,7 @@ namespace bf {
 
         std::ifstream fd(filename, std::ios::binary);
         if (!fd.is_open())
-            return FailureReason::CannotOpenFileFromDisk;
+            return RestoreBackupFailure::CannotOpenFile;
 
         fd >> output.master_block;
         fd >> fileCount;
@@ -32,7 +32,7 @@ namespace bf {
         if (!fd.good() || (fd.eof() && fileIndex < fileCount))
         {
             fd.close();
-            return FailureReason::BackupFileCorrupt;
+            return RestoreBackupFailure::BackupFileCorrupt;
         }
 
         fd.close();
