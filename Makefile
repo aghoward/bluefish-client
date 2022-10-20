@@ -21,23 +21,32 @@ all: ${EXE}
 
 clean:
 	rm -Rf ${EXE} ${OBJ_DIR} ${LIB_DIR}
-	make -C serial clean
-	make -C encryption clean
-	make -C api clean
-	make -C support clean
-	make -C commands clean
-	make -C ui clean
+	$(MAKE) -C serial clean
+	$(MAKE) -C encryption clean
+	$(MAKE) -C api clean
+	$(MAKE) -C support clean
+	$(MAKE) -C commands clean
+	$(MAKE) -C ui clean
 
 install: ${EXE}
 	cp ${EXE} /usr/bin/${EXE}
 
-${EXE}: ${EXE}.cc ${LIB_DIR} ${LIBS}
+${EXE}: ${EXE}.cc ${LIB_DIR} libs
 	$(GCC) ${CXX_FLAGS} ${LD_FLAGS} -o $@ $< ${LIBS}
 
 ${LIB_DIR}:
 	mkdir ${LIB_DIR}
 
 ${LIB_DIR}/lib%.a: %
-	make -C $<
+	$(MAKE) -C $<
+
+libs:
+	$(MAKE) -C serial
+	$(MAKE) -C ui
+	$(MAKE) -C commands
+	$(MAKE) -C support
+	$(MAKE) -C api
+	$(MAKE) -C encryption
 
 .PRECIOUS: ${LIBS}
+.PHONY: libs

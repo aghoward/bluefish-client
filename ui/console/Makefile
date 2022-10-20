@@ -1,7 +1,7 @@
 all: 
-	make -C commands
-	make -C common
+	$(MAKE) -C commands
+	$(MAKE) -C common
 
 clean:
-	make -C common clean
-	make -C commands clean
+	$(MAKE) -C common clean
+	$(MAKE) -C commands clean

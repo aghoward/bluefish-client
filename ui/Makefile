@@ -10,11 +10,11 @@ LIB =${OUTPUT_LIB_DIR}/libui.a
 all: ${OBJ_DIR} ${LIB_DIR} ${LIB}
 
 clean:
-	make -C console clean
+	$(MAKE) -C console clean
 	rm -Rf ${LIB_DIR} ${OBJ_DIR}
 
 ${LIB}:
-	make -C console
+	$(MAKE) -C console
 	$(AR) ${AR_FLAGS} $@ ${OBJ_DIR}/*.o
 
 ${LIB_DIR}:
