@@ -7,6 +7,7 @@
 
 #include "api/api.h"
 #include "api/file.h"
+#include "api/master_block.h"
 #include "serial/io_device.h"
 
 namespace detail {
@@ -86,6 +87,41 @@ namespace bf {
         device.read(&result[0], size);
 
         data = result;
+        return device;
+    }
+
+
+    template <typename T>
+    T& operator>>(T& device, MasterBlock& block)
+    {
+        device >> block.free_inodes;
+        device >> block.file_count;
+        device >> block.encryption_iv;
+        device >> block.challenge;
+        return device;
+    }
+
+    template <typename T>
+    T& operator<<(T& device, const MasterBlock& block)
+    {
+        device << block.free_inodes;
+        device << block.file_count;
+        device << block.encryption_iv;
+        device << block.challenge;
+        return device;
+    }
+
+    template <typename T>
+    T& operator<<(T& device, const File& file)
+    {
+        device << file.name << file.username << file.password;
+        return device;
+    }
+
+    template <typename T>
+    T& operator>>(T& device, File& file)
+    {
+        device >> file.name >> file.username >> file.password;
         return device;
     }
 }

@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "api/file.h"
+#include "api/serialization.h"
 #include "either/either.h"
 #include "support/failure_reason.h"
 #include "support/success.h"

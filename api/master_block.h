@@ -4,8 +4,6 @@
 #include <iostream>
 #include <string>
 
-#include "api/serialization.h"
-
 struct MasterBlock
 {
     uint32_t free_inodes;
@@ -13,27 +11,3 @@ struct MasterBlock
     std::string encryption_iv;
     std::string challenge;
 };
-
-template <typename T>
-T& operator>>(T& device, MasterBlock& block)
-{
-    using namespace bf;
-
-    device >> block.free_inodes;
-    device >> block.file_count;
-    device >> block.encryption_iv;
-    device >> block.challenge;
-    return device;
-}
-
-template <typename T>
-T& operator<<(T& device, const MasterBlock& block)
-{
-    using namespace bf;
-
-    device << block.free_inodes;
-    device << block.file_count;
-    device << block.encryption_iv;
-    device << block.challenge;
-    return device;
-}
