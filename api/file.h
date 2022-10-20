@@ -4,8 +4,6 @@
 
 #include "api/serialization.h"
 
-namespace bf {}
-
 struct File
 {
     std::string name;

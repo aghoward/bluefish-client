@@ -1,44 +1,28 @@
 #include "commands/list_files_command.h"
 
-#include "api/api.h"
-#include "api/master_block.h"
-#include "encryption/encryption_helpers.h"
-#include "support/arguments.h"
-#include "support/askpass.h"
-
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include <vector>
 
-void ListFilesCommand::execute(const Arguments&)
-{
-    _challenge_verifier.verify()
-        .match(
-            [&] (auto&& result) {
-                auto& [master_block, master_password] = result;
-                _api.list_files()
-                    .match(
-                        [&] (auto&& encrypted_filenames) {
-                            list_files(master_block, std::move(master_password), encrypted_filenames);
-                        },
-                        [&] (auto&& api_failure_reason) {
-                            auto failure_reason = _failure_reason_translator.translate(api_failure_reason);
-                            std::cout << _failure_reason_translator.to_string(failure_reason) << std::endl;
-                        });
+#include "api/api.h"
+#include "api/master_block.h"
+#include "encryption/encryption_helpers.h"
 
+either<std::vector<std::string>, FailureReason> ListFilesCommand::execute(
+        const MasterBlock& master_block,
+        std::string&& master_password)
+{
+    return _api.list_files()
+        .map(
+            [&] (auto&& encrypted_filenames) {
+                return list_files(master_block, std::move(master_password), encrypted_filenames);
             },
-            [&] (const auto& failure) {
-                std::cout << _failure_reason_translator.to_string(failure) << std::endl;
+            [&] (auto&& api_failure_reason) {
+                return _failure_reason_translator.translate(api_failure_reason);
             });
 }
 
-bool ListFilesCommand::matches(const Arguments& arguments) const
-{
-    return arguments.list;
-}
-
-void ListFilesCommand::list_files(
+std::vector<std::string> ListFilesCommand::list_files(
         const MasterBlock& master_block,
         std::string&& master_password,
         const std::vector<std::string>& encrypted_filenames)
@@ -67,6 +51,6 @@ void ListFilesCommand::list_files(
         [] (const auto& first, const auto& second) {
             return first < second;
         });
-    for (auto& filename : filenames)
-        std::cout << filename << std::endl;
+
+    return filenames;
 }

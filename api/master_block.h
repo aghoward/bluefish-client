@@ -1,12 +1,10 @@
 #pragma once
 
-#include "api/serialization.h"
-
 #include <cstdint>
-#include <string>
 #include <iostream>
+#include <string>
 
-namespace bf {}
+#include "api/serialization.h"
 
 struct MasterBlock
 {

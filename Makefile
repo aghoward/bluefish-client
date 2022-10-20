@@ -4,8 +4,13 @@ AR ?=ar
 OBJ_DIR =./obj
 LIB_DIR =./lib
 
-LIBS =${LIB_DIR}/libserial.a ${LIB_DIR}/libcommands.a ${LIB_DIR}/libcommandscommon.a \
-	  ${LIB_DIR}/libsupport.a ${LIB_DIR}/libapi.a ${LIB_DIR}/libencryption.a
+LIBS =${LIB_DIR}/libserial.a \
+	  ${LIB_DIR}/libui.a \
+	  ${LIB_DIR}/libcommands.a \
+	  ${LIB_DIR}/libcommandscommon.a \
+	  ${LIB_DIR}/libsupport.a \
+	  ${LIB_DIR}/libapi.a \
+	  ${LIB_DIR}/libencryption.a
 EXE =bluefish
 
 CXX_FLAGS +=--std=c++17 -Wall -Wextra -pedantic -Werror -I./cdif -I./ -O3
@@ -21,6 +26,7 @@ clean:
 	make -C api clean
 	make -C support clean
 	make -C commands clean
+	make -C ui clean
 
 install: ${EXE}
 	cp ${EXE} /usr/bin/${EXE}

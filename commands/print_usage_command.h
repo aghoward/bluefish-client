@@ -1,11 +1,12 @@
 #pragma once
 
 #include "api/api.h"
-#include "commands/command.h"
-#include "support/arguments.h"
+#include "api/master_block.h"
+#include "either/either.h"
+#include "support/failure_reason.h"
 #include "support/failure_reason_translator.h"
 
-class PrintUsageCommand : public Command
+class PrintUsageCommand
 {
     private:
         API& _api;
@@ -15,6 +16,5 @@ class PrintUsageCommand : public Command
         PrintUsageCommand(API& api, FailureReasonTranslator& frt)
             : _api(api), _failure_reason_translator(frt) {}
 
-        void execute(const Arguments& arguments) override;
-        bool matches(const Arguments& arguments) const override;
+        either<MasterBlock, FailureReason> execute();
 };

@@ -1,26 +1,21 @@
 #pragma once
 
-#include "commands/command.h"
-#include "commands/models/backup_file_dto.h"
-#include "api/api.h"
-#include "api/file.h"
-#include "api/master_block.h"
-#include "support/arguments.h"
-#include "support/failure_reason_translator.h"
-#include "support/failure_reason.h"
-
-#include "either/either.h"
-
 #include <vector>
 
-class RestoreBackupCommand : public Command
+#include "api/api.h"
+#include "api/file.h"
+#include "either/either.h"
+#include "support/failure_reason.h"
+#include "support/failure_reason_translator.h"
+#include "support/success.h"
+
+class RestoreBackupCommand
 {
     private:
         API& _api;
         FailureReasonTranslator& _failure_reason_translator;
 
-        bool query_user_confidence() const;
-        either<Success, APIFailureReason> write_files(const std::vector<File>& files);
+        either<bf::Success, APIFailureReason> write_files(const std::vector<File>& files);
 
     public:
         RestoreBackupCommand(
@@ -31,6 +26,5 @@ class RestoreBackupCommand : public Command
             _failure_reason_translator(frt)
         {}
 
-        bool matches(const Arguments& args) const override;
-        void execute(const Arguments& args) override;
+        either<bf::Success, RestoreBackupFailure> execute(const std::string& backup_filename);
 };
