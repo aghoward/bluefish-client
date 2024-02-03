@@ -7,3 +7,6 @@
 [submodule "either"]
 	path = either
 	url = git@github.com:aghoward/either.git
+[submodule "cryptopp-cmake"]
+	path = cryptopp-cmake
+	url = ssh://git@github.com/abdes/cryptopp-cmake.git
