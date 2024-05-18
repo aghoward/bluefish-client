@@ -10,6 +10,8 @@ struct Arguments
     uint32_t baud;
     bool list;
 
+    std::string device_filename;
+
     std::string add_file;
     std::string username;
 

@@ -4,8 +4,6 @@
 #include "argparsing/argument_parser_builder.h"
 #include "support/arguments.h"
 
-#include <string>
-
 ap::ArgumentParser<Arguments> createArgumentParser()
 {
     using namespace std::string_literals;
@@ -113,6 +111,12 @@ ap::ArgumentParser<Arguments> createArgumentParser()
             ""s,
             { "--verify"s },
             "Verify a backup file"s)
+        .add_optional(
+            "filename"s,
+            &Arguments::device_filename,
+            ""s,
+            { "--dev-file"s },
+            "Use <filename> as local storage instead of hardware storage"s)
         .build();
 }
 
