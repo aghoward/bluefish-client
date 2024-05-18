@@ -4,7 +4,6 @@
 #include "api/file.h"
 #include "api/master_block.h"
 #include "either/either.h"
-#include "serial/io_device.h"
 
 #include <string>
 #include <vector>
@@ -13,14 +12,13 @@ class WaitReadyAPIDecorator : public API
 {
     private:
         API& _decorated;
-        IODevice& _device;
 
     protected:
         either<Success, APIFailureReason> wait_ready() override;
 
     public:
-        WaitReadyAPIDecorator(API& api, IODevice& device)
-            : _decorated(api), _device(device)
+        WaitReadyAPIDecorator(API& api)
+            : _decorated(api)
         {}
 
         either<Success, APIFailureReason> write_file(const File&) override;
